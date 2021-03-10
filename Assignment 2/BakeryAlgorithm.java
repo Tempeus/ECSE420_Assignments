@@ -38,7 +38,7 @@ class Bakery implements Lock {
     Label[] label;
     public Bakery (int numofThreads){
         flag = new boolean[numofThreads];
-        label = new Label[numofThreads]();
+        label = new Label[numofThreads];
         for (int i = 0; i < numofThreads; i++){
             flag[i] = false;
         }
