@@ -1,47 +1,64 @@
-import java.util.concurrent.locks.*;
+import java.util.concurrent.locks.Lock;
 
-public class FilterLockProgram {
+public class FilterLockProgram implements Runnable {
+    public int me;
+    public static final int countToThis = 10000;
+    public static final int noOfExperiments = 3;
+    public static volatile int count = 0;
+    public static int threadCount = 8;
+    public static FilterLock lock = new FilterLock(threadCount);
 
-    public static void main(String[] args) {
+    public FilterLockProgram(int newMe) {
+        me = newMe;
+    }
 
-        FilterLock filter = new FilterLock(2);
+    public void run() {
+        int i = 0;
 
+        while (i < countToThis) {
+            lock.lock();
+            count = count + 1;
+            i = i + 1;
+            lock.unlock();
+        }
+    }
+
+    public static void spawnThreads() {
+        // We put the threads in an array for easy storage/access
+        Thread[] threads = new Thread[threadCount];
+
+        for (int i = 0; i < threadCount; i++) {
+            threads[i] = new Thread(new FilterLockProgram(i));
+            threads[i].start();
+        }
+
+        for (Thread t : threads) {
+            try {
+                t.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void main(String args[]) {
+        int wrong = 0;
+        long startTime = System.nanoTime();
+
+        for (int i = 0; i < noOfExperiments; i++) {
+            count = 0;
+
+            spawnThreads();
+
+            // Check to see that count is correct value
+            if (count != threadCount*countToThis) {
+                System.out.println("Wrong : " + count);
+                wrong++;
+            }
+        }
+
+        long endTime = System.nanoTime();
+        System.out.println("That took " + (endTime - startTime)/1000000 + " milliseconds");
+        System.out.println("Mistakes:  " + wrong + "/" + noOfExperiments);
     }
 }
-
-    public class FilterLock implements Lock{
-        static final int INITIAL_LEVEL = 0;
-        volatile int[] level;
-        volatile int[] victim;
-        volatile int noOfThreads;
-
-        public FilterLock(int noOfThreads) {
-            this.noOfThreads   = noOfThreads;
-            level  = new int[this.noOfThreads];
-            victim = new int[this.noOfThreads];
-        }
-
-        public void lock() {
-            int me = ThreadID.get();
-            for (int l = 1; l < noOfThreads; l++) {
-                level[me]  = l;
-                victim[l] = me;
-                while (isAnyThreadAtSameOrHigherLevel(me, l) && victim[l] == me) {};
-            }
-            //Thread reached here has acquired lock.
-        }
-
-        private boolean isAnyThreadAtSameOrHigherLevel(int myId, int myLevel) {
-            for (int threadId = 0; threadId < noOfThreads; threadId++){
-                if (threadId != myId && level[threadId] >= myLevel) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public void unlock() {
-            int me = ThreadID.get();
-            level[me] = INITIAL_LEVEL;
-        }
-    }
