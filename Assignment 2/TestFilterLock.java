@@ -1,30 +1,41 @@
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class TestFilterLock {
     private final static int NTHREADS = 2;
     private final static int COUNT = 100;
-    private  static int PER_THREAD = COUNT / NTHREADS;
+    private static int PER_THREAD = COUNT / NTHREADS;
 
-}
+    public static int threadCount = 8;
+    public static FilterLock lock = new FilterLock(threadCount);
 
-    public static class FilterLockThread implements Runnable{
+    public static void main(String[] args){
 
-        public int me;
-        public static final int countToThis = 10000;
-        public static final int noOfExperiments = 3;
-        public static volatile int count = 0;
-        public static int threadCount = 8;
-        public static FilterLock lock = new FilterLock(threadCount);
+        Thread[] filterLockThreads = new Thread[threadCount];
 
-        public FilterLockProgram(int newMe) {
-            me = newMe;
+        ExecutorService executor = Executors.newFixedThreadPool(NTHREADS);
+
+        for(int i= 0; i< threadCount; i++){
+            filterLockThreads[i] = new Thread(new FilterLockThread());
+            executor.execute(filterLockThreads[i]);
         }
+        executor.shutdown();
+
+        while (!executor.isTerminated()){}
+    }
+
+    public static class FilterLockThread implements Runnable {
 
         @Override
         public void run() {
-            int i = 0;
-            while (i < countToThis) {
+
+//            for( int i = 0; i < PER_THREAD; i++){
+            while (true) {
                 lock.lock();
-                count = count + 1;
-                i = i + 1;
-                lock.unlock();
+                lock.unlock(); // Release the lock
+//            }
             }
+
+        }
     }
+}
