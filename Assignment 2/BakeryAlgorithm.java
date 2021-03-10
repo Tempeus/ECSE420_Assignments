@@ -2,11 +2,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 public class BakeryAlgorithm {
-
     public static int NUMBER_THREADS = 1;
 
     public static void main(String[] args) {
-        Bakery threads = new Bakery(NUMBER_THREADS);
+        Bakery bakery = new Bakery(NUMBER_THREADS);
 
 
     }
@@ -14,9 +13,10 @@ public class BakeryAlgorithm {
 
 class Label{
     public int num;
-
+    public int index;
     public void Label(){
         int num = 0;
+        int index = 0;
     }
 }
 
@@ -38,7 +38,7 @@ class Bakery implements Lock {
     Label[] label;
     public Bakery (int numofThreads){
         flag = new boolean[numofThreads];
-        label = new Label[numofThreads];
+        label = new Label[numofThreads]();
         for (int i = 0; i < numofThreads; i++){
             flag[i] = false;
         }
@@ -50,7 +50,9 @@ class Bakery implements Lock {
         flag[id] = true;
         //find the max number in labels and add 1
         label[id].num = findMaxLabel() + 1;
-        while(true /*someone else's has a flag && their label is smaller than ours, then wait for them to finish */ );
+        int smol = findIndexOfMinLabel();
+        /* if their label is smaller than ours, then wait for them to finish */
+        while(flag[smol] && label[smol].num < label[id].num);
     }
 
     @Override
@@ -83,4 +85,14 @@ class Bakery implements Lock {
         return max;
     }
 
+    private int findIndexOfMinLabel(){
+        int min = label[0].index;
+
+        for(int i = 0; i < label.length; i++){
+            if(label[i].index < min){
+                min = label[i].index;
+            }
+        }
+        return min;
+    }
 }
