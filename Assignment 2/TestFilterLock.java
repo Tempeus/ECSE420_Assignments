@@ -29,11 +29,16 @@ public class TestFilterLock {
         public void run() {
 
             for( int i = 0; i < PER_THREAD; i++){
+
 //            while (true) {
                 lock.lock();
-                lock.unlock(); // Release the lock
+                try{
+                }finally {
+                    lock.unlock();
+                }
             }
 
         }
     }
 }
+
