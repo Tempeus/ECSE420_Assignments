@@ -1,56 +1,29 @@
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
-public class BakeryAlgorithm {
-    public static int NUMBER_THREADS = 1;
-
-    public static void main(String[] args) {
-        Bakery bakery = new Bakery(NUMBER_THREADS);
-    }
-}
-
-class Label{
-    public int num;
-    public int index;
-    public void Label(){
-        int num = 0;
-        int index = 0;
-    }
-}
-
-
-class BakeryThread implements Runnable{
-
-    public BakeryThread(){
-
-    }
-
-    @Override
-    public void run() {
-        //check which thread is being used
-    }
-}
-
-class Bakery implements Lock {
+public class Bakery implements Lock {
     boolean flag[];
     Label[] label;
+
     public Bakery (int numofThreads){
         flag = new boolean[numofThreads];
         label = new Label[numofThreads];
         for (int i = 0; i < numofThreads; i++){
             flag[i] = false;
+            label[i] = new Label();
         }
     }
 
     @Override
     public void lock(){
-        int id = 1; //placeholder
+        int id = ThreadID.get();
         flag[id] = true;
         //find the max number in labels and add 1
         label[id].num = findMaxLabel() + 1;
         int smol = findIndexOfMinLabel();
         /* if their label is smaller than ours, then wait for them to finish */
         while(flag[smol] && label[smol].num < label[id].num);
+        System.out.println("ThreadID: "+id+ " with label "+ label[id].num);
     }
 
     @Override
@@ -64,9 +37,10 @@ class Bakery implements Lock {
 
     @Override
     public void unlock(){
-        int id = 1; //placeholder
+        int id = ThreadID.get();
         flag[id] = false;
         label[id].num = 0;
+        System.out.println("ThreadID: "+ id+ " has finished queueing");
     }
 
     @Override
@@ -92,5 +66,14 @@ class Bakery implements Lock {
             }
         }
         return min;
+    }
+}
+
+class Label{
+    public int num;
+    public int index;
+    public void Label(){
+        num = 0;
+        index = 0;
     }
 }
