@@ -10,6 +10,7 @@ public class Bakery implements Lock {
         label = new Label[numofThreads];
         for (int i = 0; i < numofThreads; i++){
             flag[i] = false;
+            label[i] = new Label();
         }
     }
 
@@ -22,6 +23,7 @@ public class Bakery implements Lock {
         int smol = findIndexOfMinLabel();
         /* if their label is smaller than ours, then wait for them to finish */
         while(flag[smol] && label[smol].num < label[id].num);
+        System.out.println("ThreadID: "+id+ " with label "+ label[id].num);
     }
 
     @Override
@@ -38,6 +40,7 @@ public class Bakery implements Lock {
         int id = ThreadID.get();
         flag[id] = false;
         label[id].num = 0;
+        System.out.println("ThreadID: "+ id+ " has finished queueing");
     }
 
     @Override
@@ -70,7 +73,7 @@ class Label{
     public int num;
     public int index;
     public void Label(){
-        int num = 0;
-        int index = 0;
+        num = 0;
+        index = 0;
     }
 }

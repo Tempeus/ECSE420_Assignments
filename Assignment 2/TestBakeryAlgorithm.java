@@ -2,7 +2,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class TestBakeryAlgorithm {
-    public static int NUM_THREAD = 1;
+    public static int NUM_THREAD = 5;
     public static Bakery bakery = new Bakery(NUM_THREAD);
 
     public static void main(String[] args) {
@@ -25,7 +25,6 @@ public class TestBakeryAlgorithm {
         public void run() {
             for(int i = 0; i < NUM_THREAD; i++){
                 bakery.lock();
-                //Print something
                 bakery.unlock();
             }
         }
