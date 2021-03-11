@@ -6,8 +6,6 @@ public class BakeryAlgorithm {
 
     public static void main(String[] args) {
         Bakery bakery = new Bakery(NUMBER_THREADS);
-
-
     }
 }
 
