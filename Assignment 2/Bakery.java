@@ -4,11 +4,13 @@ import java.util.concurrent.locks.Lock;
 public class Bakery implements Lock {
     volatile boolean flag[];
     volatile Label[] label;
+    volatile int n;
 
     public Bakery(int numofThreads) {
-        flag = new boolean[numofThreads];
-        label = new Label[numofThreads];
-        for (int i = 0; i < numofThreads; i++) {
+        this.n = numofThreads;
+        flag = new boolean[n];
+        label = new Label[n];
+        for (int i = 0; i < n; i++) {
             flag[i] = false;
             label[i] = new Label();
         }
@@ -16,7 +18,7 @@ public class Bakery implements Lock {
 
     @Override
     public void lock() {
-        int id = ThreadID.get() - 1;
+        int id = ThreadID.get();
         flag[id] = true;
         int max = Label.max(label);
         label[id] = new Label(max + 1);
@@ -27,7 +29,7 @@ public class Bakery implements Lock {
 
     private boolean conflict(int id) {
         for (int i = 0; i < label.length; i++) {
-            if (i != id && flag[i] && label[id].compareTo(label[i]) > -1) {
+            if (i != id && flag[i] && label[id].compareTo(label[i]) > 0) {
                 return true;
             }
         }

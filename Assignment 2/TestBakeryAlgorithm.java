@@ -21,9 +21,11 @@ public class TestBakeryAlgorithm {
     }
 
     static class BakeryThread implements Runnable{
+        static int id = 0;
         @Override
         public void run() {
-            for(int i = 0; i < NUM_THREAD; i++){
+            ThreadID.set(id++);
+            for(int i = 0; i < 49; i++){
                 bakery.lock();
                 bakery.unlock();
             }
