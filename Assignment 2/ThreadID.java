@@ -15,4 +15,6 @@ public class ThreadID {
     public static void set(int index){
         threadID.set(index);
     }
+
+    public static void reset() {currentID = 0;}
 }

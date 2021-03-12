@@ -6,6 +6,7 @@ public class TestBakeryAlgorithm {
     public static Bakery bakery = new Bakery(NUM_THREAD);
 
     public static void main(String[] args) {
+        ThreadID.reset();
         Thread[] bakerythreads = new Thread[NUM_THREAD];
 
         ExecutorService executor = Executors.newFixedThreadPool(NUM_THREAD);
@@ -21,10 +22,8 @@ public class TestBakeryAlgorithm {
     }
 
     static class BakeryThread implements Runnable{
-        static int id = 0;
         @Override
         public void run() {
-            ThreadID.set(id++);
             for(int i = 0; i < 49; i++){
                 bakery.lock();
                 bakery.unlock();
