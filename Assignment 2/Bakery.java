@@ -29,7 +29,7 @@ public class Bakery implements Lock {
 
     private boolean conflict(int id) {
         for (int i = 0; i < label.length; i++) {
-            if (i != id && flag[i] && label[id].compareTo(label[i]) > 0) {
+            if (i != id && flag[i] && label[id].compareTo(label[i]) > 0 && label[i].counter != 0) {
                 return true;
             }
         }
@@ -64,8 +64,8 @@ public class Bakery implements Lock {
 }
 
 class Label implements Comparable<Label> {
-    int counter;
-    int id;
+    volatile int counter;
+    volatile int id;
 
     Label() {
         counter = 0;

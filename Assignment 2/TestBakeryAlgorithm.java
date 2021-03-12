@@ -2,7 +2,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class TestBakeryAlgorithm {
-    public static int NUM_THREAD = 5;
+    public static int NUM_THREAD = 8;
     public static Bakery bakery = new Bakery(NUM_THREAD);
 
     public static void main(String[] args) {
@@ -24,8 +24,13 @@ public class TestBakeryAlgorithm {
     static class BakeryThread implements Runnable{
         @Override
         public void run() {
-            for(int i = 0; i < 49; i++){
+            for(int i = 0; i < 9; i++){
                 bakery.lock();
+                try {
+                    Thread.sleep(15);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 bakery.unlock();
             }
         }
