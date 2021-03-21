@@ -27,6 +27,10 @@ public class Bakery implements Lock {
         System.out.println("ThreadID: " + id + " with label " + label[id].counter);
     }
 
+    public int getID(){
+        return ThreadID.get();
+    }
+
     private boolean conflict(int id) {
         for (int i = 0; i < label.length; i++) {
             if (i != id && flag[i] && label[id].compareTo(label[i]) > 0 && label[i].counter != 0) {
