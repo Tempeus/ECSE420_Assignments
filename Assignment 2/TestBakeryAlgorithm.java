@@ -7,6 +7,7 @@ public class TestBakeryAlgorithm {
     public static Bakery bakery = new Bakery(NUM_THREAD);
     public static boolean lockWorks = true;
     public static int c = 0;
+    public static ArrayList<Integer> workorder = new ArrayList<>();
 
     public static void main(String[] args) {
         ThreadID.reset();
@@ -26,13 +27,12 @@ public class TestBakeryAlgorithm {
     }
 
     static class BakeryThread implements Runnable{
-        public ArrayList<Integer> workorder = new ArrayList<>();
         @Override
         public void run() {
             for(int i = 0; i < 9; i++){
                 bakery.lock();
                 try {
-                    Thread.sleep(15);
+                    Thread.sleep(100);
                     workorder.add(c++);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
