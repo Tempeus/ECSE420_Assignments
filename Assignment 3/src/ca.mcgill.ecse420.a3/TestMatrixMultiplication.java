@@ -1,5 +1,7 @@
 package ca.mcgill.ecse420.a3;
 
+import java.util.concurrent.ExecutionException;
+
 public class TestMatrixMultiplication {
 
     public static void printVec(double[] vec){
@@ -16,14 +18,24 @@ public class TestMatrixMultiplication {
         }
     }
 
-    public static void main(String[] args) {
-        double[][] matrix = {{1,2,3}, {4,5,6}, {7,8,9}};
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
+        double[][] matrix = {{1,2,3,4}, {4,5,6,7}, {7,8,9,10}, {10,11,12,13}};
+        double[][] matrix2 = {{1,2,3,4}, {1,2,3,4}, {1,2,3,4}, {1,2,3,4}};
         double[] vector = {5,5,5};
 
-        double[] res = SequentialMultiplication.sequentialMultiply(matrix, vector);
-        printMatix(matrix);
-        System.out.println();
-        printVec(res);
+//        double[] res = SequentialMultiplication.sequentialMultiply(matrix, vector);
+//        printMatix(matrix);
+//        System.out.println();
+//        printVec(res);
+        Matrix a = new Matrix(4);
+        a.data = matrix;
+
+        Matrix b = new Matrix(4);
+        b.data = matrix2;
+
+        Matrix res = ParallelMultiplication.mul(a, b);
+
+        printMatix(res.data);
 
     }
 
