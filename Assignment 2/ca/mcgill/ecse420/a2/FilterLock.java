@@ -1,3 +1,5 @@
+package ca.mcgill.ecse420.a2;
+
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
@@ -33,7 +35,7 @@ public class FilterLock implements Lock {
             level[me]  = L;
             victim[L] = me;
             while (CheckLevel(me, L) && victim[L] == me) {};
-            System.out.println("ThreadID: "+me+ " is at level "+L);
+            System.out.println("TThreadID: "+me+ " is at level "+L);
         }
 
     }
