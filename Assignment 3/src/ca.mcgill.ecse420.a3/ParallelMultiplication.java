@@ -27,7 +27,7 @@ public class ParallelMultiplication {
 
     static class AddTask implements Runnable {
 
-        Matrix a, b, c;
+        private Matrix a, b, c;
 
         public  AddTask(Matrix myA, Matrix myB, Matrix myC){
             a = myA; b = myB; c = myC;
@@ -67,7 +67,7 @@ public class ParallelMultiplication {
 
     static class MulTask implements Runnable{
 
-        Matrix a, b, c, lhs, rhs;
+        private Matrix a, b, c, lhs, rhs;
 
         public MulTask(Matrix myA, Matrix myB, Matrix myC) {
 
@@ -88,13 +88,14 @@ public class ParallelMultiplication {
                     Matrix[][] aa = a.split(), bb = b.split(), cc = c.split();
                     Matrix[][] ll = lhs.split(), rr = rhs.split();
                     Future<?>[][][] future = (Future<?>[][][]) new Future[2][2][2];
-                    for (int i = 0; i < 2; i++)
+                    for (int i = 0; i < 2; i++) {
                         for (int j = 0; j < 2; j++) {
                             future[i][j][0] =
-                                    exec.submit(new MulTask(aa[i][0], bb[0][i], ll[i][j]));
+                                    exec.submit(new MulTask(aa[i][0], bb[0][j], ll[i][j]));
                             future[i][j][1] =
-                                    exec.submit(new MulTask(aa[1][i], bb[i][1], rr[i][j]));
+                                    exec.submit(new MulTask(aa[i][1], bb[1][j], rr[i][j]));
                         }
+                    }
 
                     for (int i = 0; i < 2; i++) {
                         for (int j = 0; j < 2; j++) {

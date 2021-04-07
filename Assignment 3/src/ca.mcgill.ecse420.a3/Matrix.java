@@ -11,6 +11,24 @@ public class Matrix {
         data = new double[d][d];
     }
 
+    static double[][] covertToMatrix(double[] vec){
+        int l = vec.length;
+        double[][] mat = new double[l][l];
+        for(int i = 0; i < l ; i++){
+            mat[i][0] = vec[i];
+        }
+        return mat;
+    }
+
+    static double[] covertToVec(double[][] mat){
+        int l = mat.length;
+        double[] vec = new double[l];
+        for(int i = 0; i < l ; i++){
+            vec[i] = mat[i][0];
+        }
+        return vec;
+    }
+
     private Matrix(double[][] matrix, int x, int y, int d){
         data = matrix;
         rowDisplace = x;
