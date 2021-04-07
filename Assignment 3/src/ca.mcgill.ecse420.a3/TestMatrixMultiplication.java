@@ -20,23 +20,21 @@ public class TestMatrixMultiplication {
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         double[][] matrix = {{1,2,3,4}, {4,5,6,7}, {7,8,9,10}, {10,11,12,13}};
+        double[][] matrix3 = {{1,1,1,1}, {2,2,2,2}, {3,3,3,3}, {4,4,4,4}};
         double[][] matrix2 = {{1,2,3,4}, {1,2,3,4}, {1,2,3,4}, {1,2,3,4}};
-        double[] vector = {5,5,5};
+        double[] vector = {5,5,5,5};
 
-//        double[] res = SequentialMultiplication.sequentialMultiply(matrix, vector);
-//        printMatix(matrix);
-//        System.out.println();
-//        printVec(res);
         Matrix a = new Matrix(4);
         a.data = matrix;
 
         Matrix b = new Matrix(4);
         b.data = matrix2;
 
-        Matrix res = ParallelMultiplication.mul(a, b);
+        Matrix c = new Matrix(4);
+        c.data = Matrix.covertToMatrix(vector);
 
-        printMatix(res.data);
-
+        Matrix res = ParallelMultiplication.mul(a, c);
+        printVec(Matrix.covertToVec(res.data));
     }
 
 
