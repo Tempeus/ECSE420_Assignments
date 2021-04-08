@@ -17,7 +17,16 @@ public class BoundedLockFreeQueue<T> {
     }
 
     public void Enqueue(T item){
+        int cap = capacity.get();
+        while(cap <= 0 || !capacity.compareAndSet(cap, cap - 1)){
+            cap = capacity.get();
+        }
+        int i = this.tail.getAndIncrement();
+        this.items[i % this.items.length] = item;
 
+        while(this.tailcommit.compareAndSet(i,i++)){
+
+        };
     }
 
     public T Dequeue(){
