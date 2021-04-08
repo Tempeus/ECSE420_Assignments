@@ -5,7 +5,7 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class BoundedLockFreeQueue<T> {
+public class BoundedLockBasedQueue<T> {
     private T[] items;
 
     //Locks
@@ -23,7 +23,7 @@ public class BoundedLockFreeQueue<T> {
     //queue size
     private AtomicInteger size;
 
-    public BoundedLockFreeQueue(int capacity){
+    public BoundedLockBasedQueue(int capacity){
         //initialization
         items = (T[]) new Object[capacity];
 
